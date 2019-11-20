@@ -60,12 +60,12 @@ c) for (a), (b) and for freely available “Czenglish TIMIT” database.
 
 \section{Queries}
 \begin{center}
-\begin{tabular}{ |c|c|c| } 
+\begin{tabular}{ |c|c|c|c| } 
  \hline
- File name & Samples read & Length (seconds) \\ 
+ File name & Samples read & Length (seconds) & Query \\ 
  \hline
- q1.wav &  12196 & 0.762250 \\ 
- q2.wav & 12604 & 0.787750 \\ 
+ q1.wav &  12196 & 0.762250 & essentially \\ 
+ q2.wav & 12604 & 0.787750 & exercise \\ 
  \hline
 \end{tabular}
 \end{center}
@@ -75,6 +75,34 @@ c) for (a), (b) and for freely available “Czenglish TIMIT” database.
 	\includegraphics[width=\linewidth]{./sx186_spectogram.png}
 	\caption{Would a tomboy often play outdoors?}
 \end{figure}
+
+\section{Features}
+\par
+I used linear bank of filters to calculate features of a given sentence or query. For that I used the matrix multiplication approach $\mathbf{F} = \mathbf{AP}$. 
+\par
+The purpose of matrix $\mathbf{A}$ is to sum every $B$ rows (in our case 16 rows). To make this work, we create the matrix A by filling it with zeros and ones in a specific pattern so that it produces the sum.
+\par 
+The first row of the matrix $\mathbf{A}$ will contain 16 ones and the rest of it will be zeros. The second row will contain 16 zeros, then 16 ones, and the rest will be zeros. And so on. 
+The shape of the matrix $\mathbf{A}$ is $(B, f.size)$ where $f$ is an array of sample frequencies.
+
+\section{Correlation score calculation}
+
+\section{Main output}
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{./docs/sa1.png}
+\end{figure}
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{./docs/sa2.png}
+	\includegraphics[width=\linewidth]{./docs/si1446.png}
+	\includegraphics[width=\linewidth]{./docs/si2076.png}
+	\includegraphics[width=\linewidth]{./docs/si816.png}
+	\includegraphics[width=\linewidth]{./docs/sx186.png}
+	\includegraphics[width=\linewidth]{./docs/sx276.png}
+	\includegraphics[width=\linewidth]{./docs/sx366.png}
+	\includegraphics[width=\linewidth]{./docs/sx6.png}
+	\includegraphics[width=\linewidth]{./docs/sx96.png}
+\end{figure}
+
 
 
 \end{document}
