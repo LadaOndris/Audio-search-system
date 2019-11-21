@@ -3,6 +3,7 @@
 \usepackage{siunitx}
 \usepackage{amsmath}
 \usepackage{fixmath}
+\usepackage{float}
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -21,7 +22,7 @@
 \textsc{\Huge {Project}}
 \\[0.2cm]
 
-\Large {Systém pro vyhledávání v audiu pomocí akustického vzoru}
+\Large {Audio search system using acoustic pattern}
 \\[3.0cm]
 
 \Large{Ladislav Ondris (xondri07)}
@@ -34,6 +35,25 @@
 
 \section{Recordings}
 \par
+
+\begin{center}
+\begin{tabular}{ |l|l| } 
+\hline
+Recording & Sentence \\
+\hline
+sa1.wav & She had your dark suit in greasy wash water all year.  \\ 
+sa2.wav & Don't ask me to carry an oily rag like that. \\ 
+si1446.wav & In earlier years, the preservation of food was essentially related to survival. \\ 
+si2076.wav & You gonna give me a drink, fella? \\ 
+si816.wav & Do this exercise six times each class period. \\ 
+sx186.wav & Would a tomboy often play outdoors? \\ 
+sx276.wav & John's brother repainted the garage door. \\ 
+sx366.wav & Will you please confirm government policy regarding waste removal? \\ 
+sx6.wav & Bright sunshine shimmers on the ocean. \\ 
+sx96.wav & Masquerade parties tax one's imagination. \\ 
+\hline
+\end{tabular}
+\end{center}
 
 \begin{center}
 \begin{tabular}{ |c|c|c| } 
@@ -64,14 +84,14 @@ c) for (a), (b) and for freely available “Czenglish TIMIT” database.
  \hline
  File name & Samples read & Length (seconds) & Query \\ 
  \hline
- q1.wav &  12196 & 0.762250 & essentially \\ 
- q2.wav & 12604 & 0.787750 & exercise \\ 
+ q1.wav &  10163 & 0.635188 & essentially \\ 
+ q2.wav & 10393 & 0.649563 & exercise \\ 
  \hline
 \end{tabular}
 \end{center}
 
 \section{Spectogram}
-\begin{figure}[h]
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./sx186_spectogram.png}
 	\caption{Would a tomboy often play outdoors?}
 \end{figure}
@@ -88,20 +108,80 @@ The shape of the matrix $\mathbf{A}$ is $(B, f.size)$ where $f$ is an array of s
 \section{Correlation score calculation}
 
 \section{Main output}
-\begin{figure}[h]
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sa1.png}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sa2.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/si1446.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/si2076.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/si816.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sx186.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sx276.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sx366.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sx6.png}
+\end{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{./docs/sx96.png}
 \end{figure}
+
+\section{Score evaluation}
+\par
+To find the occurrences of a query in the sentence, we have to specify a threshold. We can do it simply by examining the graphs of correlations for each sentense. We can easily see that it spikes in some places - these should be the occurrences of a query in a sentence.
+\par
+All we need to do is to find the spikes programmatically which can be done by checking whether the correlation is above the threshold and checking whether it's still ascending. Once it stops ascending, we know where the peek of the spike is and therefore the beginning of the query.
+
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ Query & Threshold \\ 
+ \hline
+ q1.wav &  0.7 \\ 
+ q2.wav & 0.6 \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+\section{Hits}
+\par
+The following hits were detected using the threshold defined above. These are the correct occurrences. No incorrect were found.
+
+\begin{center}
+\begin{tabular}{ |l|c|c|c|c| }
+\hline
+Recording & q1.wav & q2.wav & Sample from & Sample to  \\
+\hline
+sa1.wav & no & no & & \\ 
+sa2.wav & no & no & & \\ 
+si1446.wav & yes & no & 60200 & 70160 \\ 
+si2076.wav & no & no & & \\ 
+si816.wav & no & yes & 13800 & 23760\\ 
+sx186.wav & no & no & & \\ 
+sx276.wav & no & no & &\\
+sx366.wav & no & no & & \\
+sx6.wav & no & no & & \\
+sx96.wav & no & no & & \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Conclusion}
+\par
+
 
 
 
