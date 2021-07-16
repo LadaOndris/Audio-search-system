@@ -26,7 +26,7 @@ wlen = 25e-3 * Fs
 wshift = 10e-3 * Fs
 woverlap = wlen - wshift
 
-def show_spectogram(f, t, sgr, title):
+def show_spectogram(f, t, sgr, title, savefig = False):
     # prevod na PSD
     # (ve spektrogramu se obcas objevuji nuly, ktere se nelibi logaritmu, proto +1e-20)
     #sgr_log = 10 * np.log10(sgr+1e-20) 
@@ -40,7 +40,8 @@ def show_spectogram(f, t, sgr, title):
     cbar.set_label('Spectral power density [dB]', rotation=270, labelpad=15)
     
     plt.tight_layout()
-    plt.savefig('../%s_spectogram.png' % title)
+    if savefig == True:
+        plt.savefig('../%s_spectogram.png' % title)
 
 def compute_features(f, t, sgr):
     Nc = 16
@@ -62,11 +63,11 @@ def compute_correlation(Q, F, pp):
     F_transposed = np.transpose(F)
     
     correlation = 0
-    for i in range(Q[0].shape[0]): # Q shape is (43, 16)
+    for i in range(Q.shape[1]): # Q shape is (43, 16)
         corr, p_value = scipy.stats.pearsonr(Q_transposed[i], F_transposed[i + pp])
         if not math.isnan(corr):
             correlation += corr
-    return correlation / Q[0].shape[0]
+    return correlation / Q.shape[1]
     
 def get_features(data, fs): 
     t = np.arange(data.size) / fs
@@ -78,8 +79,8 @@ def get_features(data, fs):
     return B, t, features
 
 def compute_correlations(F, Q):
-    F_length = F[0].shape[0]
-    Q_length = Q[0].shape[0]
+    F_length = F.shape[1]
+    Q_length = Q.shape[1]
     total_steps = F_length - Q_length
     
     correlations = np.zeros(F_length)
@@ -91,7 +92,6 @@ def compute_correlations(F, Q):
     return correlations
 
 def find_peeks(correlations, t, threshold = 0.6):
-    
     peeks = []  
     is_ascending = False
     
@@ -125,7 +125,7 @@ def draw_main_results(filename, data_s, F_t, F_frames_count, F, corrs_q1, corrs_
     axs[2].margins(x=0)
     axs[2].set_ylim([0, 1])
     
-    plt.savefig('../docs/%s.png' % Path(filename).resolve().stem)
+    #plt.savefig('../docs/%s.png' % Path(filename).resolve().stem)
     
 
 def task3_spectogram():
@@ -155,8 +155,9 @@ def analyse_file(filepath, Q1, Q2, draw):
     
     return corrs_q1, corrs_q2, F_t
 
-    
 
+    
+"""
 filenames = [f for f in glob.glob('../sentences/*.wav')]
 
 data_q, fs_q = sf.read('../queries/q1.wav')
@@ -166,9 +167,10 @@ Q_frames_count, Q_t, Q = get_features(data_q, fs_q)
 Q2_frames_count, Q2_t, Q2 = get_features(data_q2, fs_q2)
 
 """
-data_s, fs_s = sf.read('../sentences/sa2.wav')
+data_s, fs_s = sf.read('../sentences/sa1.wav')
 f, t, sgr = spectrogram(data_s, Fs, nperseg=N, noverlap=woverlap, nfft=511)
-print(sgr.shape)
+sgr_log = 10 * np.log10(sgr+1e-20) 
+show_spectogram(f, t, sgr_log, "sa1")
 """
 for filepath in filenames:
     filename = os.path.split(filepath)[-1]
@@ -194,7 +196,7 @@ for filepath in filenames:
         print('Cutting from sample %d to %d.' %  (sample_from, sample_to))
         #cut_audio(filepath, time, time + Q2_t[-1], cut_filename) # cut from 'time' to 'time + Q2_t[-1]'
     
-
+"""
 
 
 
